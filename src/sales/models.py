@@ -5,6 +5,8 @@ from products.models import Product
 from customers.models import Customer
 from authentication.models import Profile
 
+from .utils import generate_code
+
 
 class Position(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
@@ -23,18 +25,18 @@ class Position(models.Model):
 class Sale(models.Model):
     transaction_id = models.CharField(max_length=20, blank=True)
     positions = models.ManyToManyField(Position)
-    total_price = models.FloatField(blank=True)
+    total_price = models.FloatField(blank=True, null=True)
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
     salesperson = models.ForeignKey(Profile, on_delete=models.CASCADE)
     created_at = models.DateTimeField(blank=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self) -> str:
-        return f"Sales for the amount of Ksh{self.total_price}"
+        return f"Sales for the amount of Ksh {self.total_price}"
 
     def save(self, *args, **kwargs):
         if self.transaction_id == "":
-            self.transaction_id == ""
+            self.transaction_id = generate_code()
         if self.created_at is None:
             self.created_at = timezone.now()
         return super().save(*args, **kwargs)
