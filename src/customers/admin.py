@@ -4,5 +4,5 @@ from .models import Customer
 
 
 @admin.register(Customer)
-class CustomerAdmin(models.ModelAdmin):
+class CustomerAdmin(admin.ModelAdmin):
     list_display = ["name"]
